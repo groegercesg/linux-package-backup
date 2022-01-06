@@ -65,12 +65,13 @@ backup() {
     rm -rf $backup
     mkdir $backup
     # we need to copy our .lpb file into here
-    snaps
-    apt_packages
-    flatpaks
-    dnf_packages
-    yum_packages
-    rpm_packages
+    cp .lpb $backup/.lpb
+    #snaps
+    #apt_packages
+    #flatpaks
+    #dnf_packages
+    #yum_packages
+    #rpm_packages
 }
 
 restore() {
@@ -149,8 +150,9 @@ check_lpb() {
 # Program flow
 if [[ "$1" == "-B" || "$1" == "--backup" ]]; then
     check_lpb
-    #backup
+    backup
 elif [[ "$1" == "-R" || "$1" == "--restore" ]]; then
+    check_lpb
     restore
 elif [[ "$1" == "-L" || "$1" == "--make-lpb" ]]; then
     create_lpb

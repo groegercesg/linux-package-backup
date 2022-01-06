@@ -4,3 +4,4 @@ flatpak.list
 dnf_packages.list
 yum_packages.list
 rpm_packages.list
+.lpb
