@@ -33,17 +33,23 @@ flatpaks() {
 }
 
 dnf_packages() {
-    dnf list installed | tr -s \  \\t | cut -f 1 > dnf_packages.list
+    dnf list installed | grep -v "Installed" | tr -s \  \\t | cut -f 1 > dnf_packages.list
     echo "Dnf Packages list saved"
+}
+
+yum_packages() {
+    yum list installed | grep -v "Installed" | tr -s \  \\t | cut -f 1 > yum_packages.list
+    echo "Yum Packages list saved"
 }
 
 # Functions for backup and restore
 backup() {
     echo "Backup Mode"
-    #snaps
-    #apt_packages
-    #flatpaks
-    #dnf_packages
+    snaps
+    apt_packages
+    flatpaks
+    dnf_packages
+    yum_packages
 }
 
 restore() {

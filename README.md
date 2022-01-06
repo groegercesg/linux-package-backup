@@ -6,5 +6,5 @@ Linux Package Backup will allow you to backup all the packages you have in your 
 - [x] flatpaks
 - [x] apt-get
 - [x] dnf
-- [ ] yum
+- [x] yum
 - [ ] rpm
