@@ -14,10 +14,43 @@ if [[ "$EUID" -ne 0 ]]; then
         exit 1
 fi
 
-if [[ "$1" == "-B" || "$1" == "--backup" ]]; then
+# Sub-functions for backup
+snaps() {
+    input=$(snap list | cut -f -1 -d ' ')
+
+    echo "$input" | sed 1d > snaps.list
+    echo "Snaps list saved"
+}
+
+apt_packages() {
+    sudo apt list --manual-installed | grep "\[installed\]" | cut -f -1 -d '/' > apt_package.list
+    echo "Apt Packages list saved"
+}
+
+flatpaks() {
+    # For this, we are simply saving names of packages, on restore Flatpak will then go and install the most recent version.
+    flatpak list | cut -f -1 | uniq -u > flatpak.list
+
+    echo "Flatpak list saved"
+}
+
+# Functions for backup and restore
+backup() {
     echo "Backup Mode"
-elif [[ "$1" == "-R" || "$1" == "--restore" ]]; then
+    #snaps
+    #apt_packages
+    flatpaks
+}
+
+restore() {
     echo "Restore Mode"
+}
+
+# Program flow
+if [[ "$1" == "-B" || "$1" == "--backup" ]]; then
+    backup
+elif [[ "$1" == "-R" || "$1" == "--restore" ]]; then
+    restore
 else
     echo "Usage: backup.sh -B"      
     printf "\n"
