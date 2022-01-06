@@ -79,6 +79,7 @@ restore() {
 
 create_lpb() {
     # Function to create a new .lpb default file
+    rm -f .lpb
     touch .lpb
     read -p "Would you like to backup Snap Packages? ([yes]/no): " choice
     if [ "$choice" == "n" ] || [ "$choice" == "no" ] || [ "$choice" == "N" ] || [ "$choice" == "No" ] || [ "$choice" == "NO" ] || [ "$choice" == "nO" ]; then
@@ -151,6 +152,8 @@ if [[ "$1" == "-B" || "$1" == "--backup" ]]; then
     #backup
 elif [[ "$1" == "-R" || "$1" == "--restore" ]]; then
     restore
+elif [[ "$1" == "-L" || "$1" == "--make-lpb" ]]; then
+    create_lpb
 else
     echo "Usage: backup.sh -B"      
     printf "\n"
@@ -158,4 +161,6 @@ else
     echo "-B, --backup                       Backup all installed packages in the current linux installation"
     printf "\t"
     echo "-R, --restore <backup-directory>   Restore all packages contained in a backup directory made previously with $0 -B"
+    printf "\t"
+    echo "-L, --make-lpb                     Remakes your local .lpb file so that you can change or alter what packages you want to backup"
 fi
