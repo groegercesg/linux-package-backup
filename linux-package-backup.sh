@@ -66,12 +66,11 @@ backup() {
     mkdir $backup
     # we need to copy our .lpb file into here
     cp .lpb $backup/.lpb
-    #snaps
-    #apt_packages
-    #flatpaks
-    #dnf_packages
-    #yum_packages
-    #rpm_packages
+    
+    # Run all of the backup functions requested by the .lpb file
+    while read p; do
+        $p
+    done < .lpb
 }
 
 restore() {
