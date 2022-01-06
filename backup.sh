@@ -6,7 +6,7 @@ set -e
 date=$(date '+%H:%M:%S-%m-%d-%Y')
 backup=package-backup-$date
 
-echo "Linux Package Backup program"
+echo "Linux Package Backup"
 
 # Check if script was executed as root
 if [[ "$EUID" -ne 0 ]]; then
@@ -64,6 +64,7 @@ backup() {
     echo "Backup Mode"
     rm -rf $backup
     mkdir $backup
+    # we need to copy our .lpb file into here
     snaps
     apt_packages
     flatpaks
@@ -76,9 +77,28 @@ restore() {
     echo "Restore Mode"
 }
 
+create_lpb() {
+    # Function to create a new .lpb default file
+}
+
+check_lpb() {
+    # Function for checking if the init file .lpb exists
+    if [[ ! -f .lpb ]]; then
+        # Does not exist
+        read -p "You do not have a .lpb file, this file stores the default backup behaviour, would you like to create one? ([yes]/no): " choice
+        if [ "$choice" == "n" ] || [ "$choice" == "no" ] || [ "$choice" == "N" ] || [ "$choice" == "No" ] || [ "$choice" == "NO" ] || [ "$choice" == "nO" ]; then
+            exit 1
+        fi
+
+        # Initialise a new .lpb file
+        create_lpb
+    fi
+}
+
 # Program flow
 if [[ "$1" == "-B" || "$1" == "--backup" ]]; then
-    backup
+    check_lpb
+    #backup
 elif [[ "$1" == "-R" || "$1" == "--restore" ]]; then
     restore
 else
