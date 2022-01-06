@@ -7,4 +7,4 @@ Linux Package Backup will allow you to backup all the packages you have in your 
 - [x] apt-get
 - [x] dnf
 - [x] yum
-- [ ] rpm
+- [x] rpm
