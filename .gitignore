@@ -2,3 +2,5 @@ snaps.list
 apt_package.list
 flatpak.list
 dnf_packages.list
+yum_packages.list
+rpm_packages.list
