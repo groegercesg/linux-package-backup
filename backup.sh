@@ -79,6 +79,56 @@ restore() {
 
 create_lpb() {
     # Function to create a new .lpb default file
+    touch .lpb
+    read -p "Would you like to backup Snap Packages? ([yes]/no): " choice
+    if [ "$choice" == "n" ] || [ "$choice" == "no" ] || [ "$choice" == "N" ] || [ "$choice" == "No" ] || [ "$choice" == "NO" ] || [ "$choice" == "nO" ]; then
+        echo "Ignoring Snap Packages"
+    else
+        echo "Adding Snap Packages to the .lpb"
+        echo "snaps" >> .lpb
+    fi
+
+    read -p "Would you like to backup Apt packages? ([yes]/no): " choice
+    if [ "$choice" == "n" ] || [ "$choice" == "no" ] || [ "$choice" == "N" ] || [ "$choice" == "No" ] || [ "$choice" == "NO" ] || [ "$choice" == "nO" ]; then
+        echo "Ignoring Apt Packages"
+    else
+        echo "Adding Apt Packages to the .lpb"
+        echo "apt_packages" >> .lpb
+    fi
+
+    read -p "Would you like to backup Flatpaks? ([yes]/no): " choice
+    if [ "$choice" == "n" ] || [ "$choice" == "no" ] || [ "$choice" == "N" ] || [ "$choice" == "No" ] || [ "$choice" == "NO" ] || [ "$choice" == "nO" ]; then
+        echo "Ignoring Flatpaks"
+    else
+        echo "Adding Flatpaks to the .lpb"
+        echo "flatpaks" >> .lpb
+    fi
+
+    read -p "Would you like to backup DNF packages? ([yes]/no): " choice
+    if [ "$choice" == "n" ] || [ "$choice" == "no" ] || [ "$choice" == "N" ] || [ "$choice" == "No" ] || [ "$choice" == "NO" ] || [ "$choice" == "nO" ]; then
+        echo "Ignoring DNF Packages"
+    else
+        echo "Adding DNF Packages to the .lpb"
+        echo "dnf_packages" >> .lpb
+    fi
+
+    read -p "Would you like to backup Yum packages? ([yes]/no): " choice
+    if [ "$choice" == "n" ] || [ "$choice" == "no" ] || [ "$choice" == "N" ] || [ "$choice" == "No" ] || [ "$choice" == "NO" ] || [ "$choice" == "nO" ]; then
+        echo "Ignoring Yum Packages"
+    else
+        echo "Adding Yum Packages to the .lpb"
+        echo "yum_packages" >> .lpb
+    fi
+
+    read -p "Would you like to backup Rpm packages? ([yes]/no): " choice
+    if [ "$choice" == "n" ] || [ "$choice" == "no" ] || [ "$choice" == "N" ] || [ "$choice" == "No" ] || [ "$choice" == "NO" ] || [ "$choice" == "nO" ]; then
+        echo "Ignoring Rpm Packages"
+    else
+        echo "Adding Rpm Packages to the .lpb"
+        echo "rpm_packages" >> .lpb
+    fi
+
+    echo "You have successfully created a .lpb file"
 }
 
 check_lpb() {
