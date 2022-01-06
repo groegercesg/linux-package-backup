@@ -3,7 +3,8 @@ Linux Package Backup will allow you to backup all the packages you have in your 
 
 ## Sources of packages supported
 - [x] snaps
-- [ ] flatpaks
+- [x] flatpaks
 - [x] apt-get
-- [ ] dnf
+- [x] dnf
 - [ ] yum
+- [ ] rpm

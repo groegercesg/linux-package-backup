@@ -17,7 +17,6 @@ fi
 # Sub-functions for backup
 snaps() {
     input=$(snap list | cut -f -1 -d ' ')
-
     echo "$input" | sed 1d > snaps.list
     echo "Snaps list saved"
 }
@@ -30,8 +29,12 @@ apt_packages() {
 flatpaks() {
     # For this, we are simply saving names of packages, on restore Flatpak will then go and install the most recent version.
     flatpak list | cut -f -1 | uniq -u > flatpak.list
-
     echo "Flatpak list saved"
+}
+
+dnf_packages() {
+    dnf list installed | tr -s \  \\t | cut -f 1 > dnf_packages.list
+    echo "Dnf Packages list saved"
 }
 
 # Functions for backup and restore
@@ -39,7 +42,8 @@ backup() {
     echo "Backup Mode"
     #snaps
     #apt_packages
-    flatpaks
+    #flatpaks
+    #dnf_packages
 }
 
 restore() {

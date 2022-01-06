@@ -1,2 +1,4 @@
 snaps.list
+apt_package.list
 flatpak.list
+dnf_packages.list
