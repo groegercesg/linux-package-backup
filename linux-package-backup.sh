@@ -72,7 +72,7 @@ restore_snaps() {
                 sudo snap install $i;
             } &> /dev/null
         done
-        echo -e "SUCCESS: Snap softwares restored"
+        echo -e "SUCCESS: Snap software packages restored"
     else
         echo -e "WARNING: Could not find snaps backup list"
     fi
@@ -83,6 +83,17 @@ apt_packages() {
     sudo apt list --manual-installed | grep "\[installed\]" | cut -f -1 -d '/' > apt_package.list
     cd ..
     echo "Apt Packages list saved"
+}
+
+restore_apt_packages() {
+    if [ -f "./apt_package.list" ]; then
+        sudo apt update
+        list=$( cat ./apt_package.list )
+        sudo apt install $list -y
+        echo -e "SUCCESS: Apt software packages restored"
+    else
+        echo -e "WARNING: Could not find apt packages backup list"
+    fi
 }
 
 flatpaks() {
