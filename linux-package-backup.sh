@@ -55,13 +55,27 @@ case "$1" in
         exit 1
 esac
 
-# Sub-functions for backup
+# Sub-functions for backup and restore
 snaps() {
     cd $backup
     input=$(snap list | cut -f -1 -d ' ')
     echo "$input" | sed 1d > snaps.list
     cd ..
     echo "Snaps list saved"
+}
+
+restore_snaps() {
+    if [ -f "./snaps.list" ]; then
+        list=( "$( cat ./snaps.list )" )
+        for i in ${list[@]};
+            do {
+                sudo snap install $i;
+            } &> /dev/null
+        done
+        echo -e "SUCCESS: Snap softwares restored"
+    else
+        echo -e "WARNING: Could not find snaps backup list"
+    fi
 }
 
 apt_packages() {
@@ -133,8 +147,10 @@ restore() {
 
         # Run all of the restore functions requested by the .lpb file
         while read p; do
-            echo "restore_"$p
+            "restore_"$p
         done < .lpb
+
+        cd ..
     else
         # The specified directory for backups doesn't exist
         echo "Cannot find the backup directory: $FILE"
