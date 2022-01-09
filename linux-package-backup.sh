@@ -3,7 +3,7 @@
 # Exit program immediately if non-zero exit status
 set -e
 
-date=$(date '+%H:%M:%S-%m-%d-%Y')
+date=$(date '+%d-%m-%Y')
 backup=package-backup-$date
 
 echo "Linux Package Backup"
@@ -14,46 +14,46 @@ if [[ "$EUID" -ne 0 ]]; then
         exit 1
 fi
 
-while test $# -gt 0; do
-    case "$1" in
-        -R)
-            shift
-            First_Arg="-R"
-            FILE=$1
-            shift
-            ;;
-        --restore)
-            shift
-            First_Arg="--restore"
-            FILE=$1
-            shift
-            ;;
-        -B)
-            shift
-            First_Arg="-B"
-            shift
-            ;;
-        --backup)
-            shift
-            First_Arg="--backup"
-            shift
-            ;;
-        -L)
-            shift
-            First_Arg="-L"
-            shift
-            ;;
-        --make-lpb)
-            shift
-            First_Arg="--make-lpb"
-            shift
-            ;;
-        *)
-            echo "$1 is not a recognized flag!"
-            return 1
-            ;;
-    esac
-done
+program_help() {
+    echo "Usage: backup.sh [<options>]"      
+    printf "\n"
+    printf "\t"
+    echo "-B, --backup                       Backup all installed packages in the current linux installation"
+    printf "\t"
+    echo "-R, --restore <backup-directory>   Restore all packages contained in a backup directory made previously with $0 -B"
+    printf "\t"
+    echo "-L, --make-lpb                     Remakes your local .lpb file so that you can change or alter what packages you want to backup"
+}
+
+# Process program arguments incoming
+case "$1" in
+    -R)
+        shift
+        First_Arg="-R"
+        FILE=$1
+        ;;
+    --restore)
+        shift
+        First_Arg="--restore"
+        FILE=$1
+        ;;
+    -B)
+        First_Arg="-B"
+        ;;
+    --backup)
+        First_Arg="--backup"
+        ;;
+    -L)
+        First_Arg="-L"
+        ;;
+    --make-lpb)
+        First_Arg="--make-lpb"
+        ;;
+    *)
+        echo "$1 is not a recognized flag!"
+        program_help
+        exit 1
+esac
 
 # Sub-functions for backup
 snaps() {
@@ -116,10 +116,11 @@ backup() {
 
 restore() {
     echo "Restore Mode"
+
     if [[ "$FILE" == "" ]]; then
         echo "No backup directory supplied: $FILE"
             exit 1
-    elif [ -d "$2" ]; then
+    elif [ -d $FILE ]; then
         # We have found the directory for backups
         cd $FILE
 
@@ -132,7 +133,7 @@ restore() {
 
         # Run all of the restore functions requested by the .lpb file
         while read p; do
-            echo "restore_" + $p
+            echo "restore_"$p
         done < .lpb
     else
         # The specified directory for backups doesn't exist
@@ -211,7 +212,6 @@ check_lpb() {
 }
 
 # Program flow
-echo "$First_Arg"
 if [[ "$First_Arg" == "-B" || "$First_Arg1" == "--backup" ]]; then
     check_lpb
     backup
@@ -221,12 +221,5 @@ elif [[ "$First_Arg" == "-R" || "$First_Arg" == "--restore" ]]; then
 elif [[ "$First_Arg" == "-L" || "$First_Arg" == "--make-lpb" ]]; then
     create_lpb
 else
-    echo "Usage: backup.sh [<options>]"      
-    printf "\n"
-    printf "\t"
-    echo "-B, --backup                       Backup all installed packages in the current linux installation"
-    printf "\t"
-    echo "-R, --restore <backup-directory>   Restore all packages contained in a backup directory made previously with $0 -B"
-    printf "\t"
-    echo "-L, --make-lpb                     Remakes your local .lpb file so that you can change or alter what packages you want to backup"
+    program_help
 fi
