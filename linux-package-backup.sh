@@ -14,6 +14,33 @@ if [[ "$EUID" -ne 0 ]]; then
         exit 1
 fi
 
+while test $# -gt 0; do
+    case "$1" in
+        -R)
+            shift
+            FILE=$1
+            shift
+            ;;
+        --restore)
+            shift
+            FILE=$1
+            shift
+            ;;
+        -B)
+            shift
+            shift
+            ;;
+        --backup)
+            shift
+            shift
+            ;;
+        *)
+            echo "$1 is not a recognized flag!"
+            return 1
+            ;;
+    esac
+done
+
 # Sub-functions for backup
 snaps() {
     cd $backup
