@@ -89,7 +89,9 @@ restore_apt_packages() {
     if [ -f "./apt_package.list" ]; then
         sudo apt update
         list=$( cat ./apt_package.list )
-        sudo apt install $list -y
+        {
+            sudo apt install $list -y
+        } &> /dev/null
         echo -e "SUCCESS: Apt software packages restored"
     else
         echo -e "WARNING: Could not find apt packages backup list"
