@@ -18,20 +18,34 @@ while test $# -gt 0; do
     case "$1" in
         -R)
             shift
+            First_Arg="-R"
             FILE=$1
             shift
             ;;
         --restore)
             shift
+            First_Arg="--restore"
             FILE=$1
             shift
             ;;
         -B)
             shift
+            First_Arg="-B"
             shift
             ;;
         --backup)
             shift
+            First_Arg="--backup"
+            shift
+            ;;
+        -L)
+            shift
+            First_Arg="-L"
+            shift
+            ;;
+        --make-lpb)
+            shift
+            First_Arg="--make-lpb"
             shift
             ;;
         *)
@@ -102,16 +116,12 @@ backup() {
 
 restore() {
     echo "Restore Mode"
-    if [[ "$2" == "" ]]; then
-        echo "No backup directory supplied: $2"
-        echo "$0"
-        echo "$1"
-        echo "$2"
-        echo "$3"
+    if [[ "$FILE" == "" ]]; then
+        echo "No backup directory supplied: $FILE"
             exit 1
     elif [ -d "$2" ]; then
         # We have found the directory for backups
-        cd $2
+        cd $FILE
 
         # Check lpb
         if [[ ! -f .lpb ]]; then
@@ -126,7 +136,7 @@ restore() {
         done < .lpb
     else
         # The specified directory for backups doesn't exist
-        echo "Cannot find the backup directory: $2"
+        echo "Cannot find the backup directory: $FILE"
             exit 1
     fi
 }
@@ -201,13 +211,14 @@ check_lpb() {
 }
 
 # Program flow
-if [[ "$1" == "-B" || "$1" == "--backup" ]]; then
+echo "$First_Arg"
+if [[ "$First_Arg" == "-B" || "$First_Arg1" == "--backup" ]]; then
     check_lpb
     backup
-elif [[ "$1" == "-R" || "$1" == "--restore" ]]; then
+elif [[ "$First_Arg" == "-R" || "$First_Arg" == "--restore" ]]; then
     check_lpb
     restore
-elif [[ "$1" == "-L" || "$1" == "--make-lpb" ]]; then
+elif [[ "$First_Arg" == "-L" || "$First_Arg" == "--make-lpb" ]]; then
     create_lpb
 else
     echo "Usage: backup.sh [<options>]"      
