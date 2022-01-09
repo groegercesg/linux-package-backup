@@ -75,6 +75,33 @@ backup() {
 
 restore() {
     echo "Restore Mode"
+    if [[ "$2" == "" ]]; then
+        echo "No backup directory supplied: $2"
+        echo "$0"
+        echo "$1"
+        echo "$2"
+        echo "$3"
+            exit 1
+    elif [ -d "$2" ]; then
+        # We have found the directory for backups
+        cd $2
+
+        # Check lpb
+        if [[ ! -f .lpb ]]; then
+            # .lpb does not exist
+            echo "We couldn't find an .lpb for the associated backup file"
+                exit 1
+        fi
+
+        # Run all of the restore functions requested by the .lpb file
+        while read p; do
+            echo "restore_" + $p
+        done < .lpb
+    else
+        # The specified directory for backups doesn't exist
+        echo "Cannot find the backup directory: $2"
+            exit 1
+    fi
 }
 
 create_lpb() {
@@ -156,7 +183,7 @@ elif [[ "$1" == "-R" || "$1" == "--restore" ]]; then
 elif [[ "$1" == "-L" || "$1" == "--make-lpb" ]]; then
     create_lpb
 else
-    echo "Usage: backup.sh -B"      
+    echo "Usage: backup.sh [<options>]"      
     printf "\n"
     printf "\t"
     echo "-B, --backup                       Backup all installed packages in the current linux installation"
