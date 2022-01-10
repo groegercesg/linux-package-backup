@@ -116,6 +116,30 @@ flatpaks() {
     echo "Flatpak list saved"
 }
 
+restore_flatpaks() {
+        if [ -f "./flatpak.list" ]; then
+        rm -f err err_filt
+        #list=( "$( cat ./flatpak.list )" )
+        while read p; do
+            echo $p
+            sudo flatpak install -y --noninteractive $p &>> err
+        done <flatpak.list
+        cat err | grep "error" > err_filt
+        count=$(wc -l < err_filt)
+        if [ $count -ne 0 ]; then
+            cat err_filt
+            #rm -f err err_filt
+            echo -e "ERROR: Errors detected"
+                exit 1
+        else
+            rm -f err err_filt
+            echo -e "SUCCESS: Flatpak software packages restored"
+        fi
+    else
+        echo -e "WARNING: Could not find Flatpak backup list"
+    fi
+}
+
 dnf_packages() {
     cd $backup
     dnf list installed | grep -v "Installed" | tr -s \  \\t | cut -f 1 > dnf_packages.list
