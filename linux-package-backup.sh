@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Exit program immediately if non-zero exit status
-set -e
+#set -e
 
 date=$(date '+%d-%m-%Y')
 backup=package-backup-$date
@@ -50,7 +50,7 @@ case "$1" in
         First_Arg="--make-lpb"
         ;;
     *)
-        echo "$1 is not a recognized flag!"
+        echo "'$1' is not a recognized flag!"
         program_help
         exit 1
 esac
@@ -66,13 +66,23 @@ snaps() {
 
 restore_snaps() {
     if [ -f "./snaps.list" ]; then
+        rm -f err err_filt
         list=( "$( cat ./snaps.list )" )
-        for i in ${list[@]};
-            do {
-                sudo snap install $i;
-            } &> /dev/null
+        for i in ${list[@]}; do {
+            sudo snap install $i 2>> err;
+            } 
         done
-        echo -e "SUCCESS: Snap software packages restored"
+        cat err | grep -v "is already installed" > err_filt
+        count=$(wc -l < err_filt)
+        if [ $count -ne 0 ]; then
+            cat err_filt
+            rm -f err err_filt
+            echo -e "ERROR: Errors detected"
+                exit 1
+        else
+            rm -f err err_filt
+            echo -e "SUCCESS: Snap software packages restored"
+        fi
     else
         echo -e "WARNING: Could not find snaps backup list"
     fi
